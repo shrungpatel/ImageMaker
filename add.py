@@ -20,23 +20,24 @@ def split_quotes(quote: str) -> list[str]:
         quotes_list.append(get_words(words_list, start, end))
     return quotes_list
     
-def add_quote_to_images(quote, photos_folder, output_folder, animal):
+def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_chosen=None):
     """Add quotes to images in the specified folder."""
-    os.makedirs(output_folder + '/' + animal, exist_ok=True)
-    for filename in os.listdir(photos_folder + '/' + animal):
+    os.makedirs(output_folder + '/' + photo, exist_ok=True)
+    for filename in os.listdir(photos_folder + '/' + photo):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
             # does the quote need to be split?
             if len(quote) >= 30:
                 lines_list = split_quotes(quote) 
             else:
                 lines_list = [quote]               
-            img_path = os.path.join(photos_folder + '/' + animal, filename)
+            img_path = os.path.join(photos_folder + '/' + photo, filename)
             img = Image.open(img_path).convert("L")
             draw = ImageDraw.Draw(img)
             try:
                 font_size = img.width / (len(lines_list[0]) - 2)
                 fonts = ["arial.ttf", "BOOKOSI.TTF", "Candaraz.ttf", "georgia.ttf", "times.ttf", "verdana.ttf", "consola.ttf"]
-                font_chosen = random.choice(fonts)
+                if font_chosen is None:
+                    font_chosen = random.choice(fonts)
                 print("Using font: " + font_chosen)
                 font = ImageFont.truetype(font_chosen, font_size)
             except IOError:
@@ -63,7 +64,7 @@ def add_quote_to_images(quote, photos_folder, output_folder, animal):
                 draw.text((x, y), line, font=font, fill="white")
                 y += text_height + 20 # the 20 adds a little more spacing
             
-            output_path = os.path.join(output_folder + '/' + animal, animal) + str(random.randint(1, 10000)) + ".png"
+            output_path = os.path.join(output_folder + '/' + photo, photo) + str(random.randint(1, 10000)) + ".png"
             img.save(output_path)
             
             print("Added to " + output_path)
@@ -173,13 +174,19 @@ quotes = [
     "I will not be scared of the dark, for the dark is where the stars shine brightest.",
     "Let it be said of me that I lived life to the fullest and gave everything I had.",
     "Not trying is the only sure way to fail.",
-    #"You either die trying or try dying.",
+    "Do not go where the path may lead, go instead where there is no path and leave a trail.",
+    "Follow what your heart knows to be right.",
+    "In a world where you can be anything, be kind.",
+    "Kindness is a language which the deaf can hear and the blind can see.",
+    "No act of kindness, no matter how small, is ever wasted.",
+    "Kindness is the sunshine in which virtue grows.",
+    "Carry out a random act of kindness, with no expectation of reward, safe in the knowledge that one day someone might do the same for you.",
+    "Set your mind on a definite goal and observe how quickly the world stands aside to let you pass.",
+    "The only limit to our realization of tomorrow will be our doubts of today.",
+    "The best way to predict the future is to create it."
 ]
-# get  list of folder names in the folder called photos
 
-photos_folder = "photos"
-output_folder = "output"
 photos_folders = [f for f in os.listdir(photos_folder) if os.path.isdir(os.path.join(photos_folder, f))]
 print("Found animal folders: " + str(photos_folders))
 
-[add_quote_to_images(random.choice(quotes), photos_folder, output_folder, random.choice(photos_folders)) for _ in range(15)]
+[add_quote_to_images(quote=random.choice(quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(15)]
