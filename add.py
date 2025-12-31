@@ -44,6 +44,10 @@ def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_ch
                 font = ImageFont.load_default()
             y = 0.25 * img.height
             first_line = True
+            if random.choice([True, False]): #shadow
+                offset = 5
+            else:
+                offset = 1
             for line in lines_list:
                 bbox = draw.textbbox((0, 0), line, font=font)
                 text_width = bbox[2] - bbox[0]
@@ -55,11 +59,6 @@ def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_ch
                         y = 0.25 * img.height
                     first_line = False
                 x = (img.width - text_width) / 2 
-
-                if random.choice([True, False]): #shadow
-                    offset = 5
-                else:
-                    offset = 1
 
                 # Add text with black outline for visibility
                 draw.text((x-1, y-1), line, font=font, fill="black")
