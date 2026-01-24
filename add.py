@@ -1,6 +1,7 @@
 import os
 from PIL import Image, ImageDraw, ImageFont
 import random
+import requests
 
 def get_words(words_list: list[str], start: int, end: int) -> str:
     """Gets the words from the word list at the specified indices"""
@@ -190,7 +191,14 @@ quotes = [
     "The best way to predict the future is to create it."
 ]
 
+
+response = requests.get("https://zenquotes.io/api/quotes/keyword=happiness")
+data = response.json()
+api_quotes = []
+for item in data:
+    api_quotes.append(item['q'])
+
 photos_folders = [f for f in os.listdir(photos_folder) if os.path.isdir(os.path.join(photos_folder, f))]
 print("Found animal folders: " + str(photos_folders))
 
-[add_quote_to_images(quote=random.choice(quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(15)]
+[add_quote_to_images(quote=random.choice(api_quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(20)]
