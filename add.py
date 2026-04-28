@@ -1,3 +1,5 @@
+import info
+
 import os
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -201,4 +203,20 @@ for item in data:
 photos_folders = [f for f in os.listdir(photos_folder) if os.path.isdir(os.path.join(photos_folder, f))]
 print("Found animal folders: " + str(photos_folders))
 
-[add_quote_to_images(quote=random.choice(api_quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(20)]
+quotes_source = info.QUOTES_DIR
+
+for photo in range(20):
+    random_file = random.choice(os.listdir(quotes_source))
+    try:
+        with open(os.path.join(quotes_source, random_file), 'r') as f:
+            print("Using quote from file: " + random_file)
+            print(os.path.join(quotes_source, random_file))
+            lines = f.readlines()
+            random_line = random.choice(lines).strip()
+            print("Using quote from file: " + random_line)
+            add_quote_to_images(quote=random_line, photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders))
+    except Exception as e:
+        print("Error reading file: " + str(e))
+
+# this is using the old quotes list and the api quotes, but I want to switch to using the quotes from the files instead
+#[add_quote_to_images(quote=random.choice(api_quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(20)]
