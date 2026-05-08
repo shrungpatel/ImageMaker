@@ -1,9 +1,10 @@
 import info
 
 import os
-from PIL import Image, ImageDraw, ImageFont
 import random
 import requests
+
+from PIL import Image, ImageDraw, ImageFont
 
 def get_words(words_list: list[str], start: int, end: int) -> str:
     """Gets the words from the word list at the specified indices"""
@@ -23,6 +24,14 @@ def split_quotes(quote: str) -> list[str]:
         quotes_list.append(get_words(words_list, start, end))
     return quotes_list
     
+def get_quotes_from_api():
+    response = requests.get("https://zenquotes.io/api/quotes/keyword=happiness")
+    data = response.json()
+    api_quotes = []
+    for item in data:
+        api_quotes.append(item['q'])
+    return api_quotes
+
 def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_chosen=None):
     """Add quotes to images in the specified folder."""
     os.makedirs(output_folder + '/' + photo, exist_ok=True)
@@ -135,7 +144,7 @@ quotes = [
     "In the end, we only regret the chances we didn't take.",
     "Life is what happens when you're busy making other plans.",   
     "The best way to predict the future is to create it.",
-    "You miss 100% of the shots you don't take.",
+    "You miss 100\\% \of the shots you don't take.",
     "Success is not the key to happiness. Happiness is the key to success.",
     "If you love what you are doing, you will be successful.",
     "Success is not in what you have, but who you are.",
@@ -193,12 +202,8 @@ quotes = [
     "The best way to predict the future is to create it."
 ]
 
+#quotes = get_quotes_from_api()
 
-#response = requests.get("https://zenquotes.io/api/quotes/keyword=happiness")
-#data = response.json()
-#api_quotes = []
-#for item in data:
-#    api_quotes.append(item['q'])
 
 photos_folders = [f for f in os.listdir(photos_folder) if os.path.isdir(os.path.join(photos_folder, f))]
 
