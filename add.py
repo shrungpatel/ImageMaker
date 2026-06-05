@@ -32,6 +32,19 @@ def get_quotes_from_api():
         api_quotes.append(item['q'])
     return api_quotes
 
+def get_quotes_from_files(quotes_source):
+    quotes = []
+    for filename in os.listdir(quotes_source):
+        try:
+            if filename.lower().endswith('.txt'):
+                with open(os.path.join(quotes_source, filename), 'r') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        quotes.append(line.strip())
+        except:
+            print("Error reading file: " + filename)
+    return quotes
+
 def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_chosen=None):
     """Add quotes to images in the specified folder."""
     os.makedirs(output_folder + '/' + photo, exist_ok=True)
@@ -208,20 +221,10 @@ quotes = [
 photos_folders = [f for f in os.listdir(photos_folder) if os.path.isdir(os.path.join(photos_folder, f))]
 
 quotes_source = info.QUOTES_DIR
+quotes = get_quotes_from_files(quotes_source)
 
-for photo in range(20):
-    random_file = random.choice(os.listdir(quotes_source))
-    try:
-        with open(os.path.join(quotes_source, random_file), 'r') as f:
-            print("Using quotes from file: " + random_file)
-            print(os.path.join(quotes_source, random_file))
-            lines = f.readlines()
-            for times in range(5):
-                random_line = random.choice(lines).strip()
-                print("Using quote from file: " + random_line)
-                add_quote_to_images(quote=random_line, photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders))
-    except Exception as e:
-        print("Error reading file: " + str(e))
+for _ in range(5):
+    add_quote_to_images(quote=random.choice(quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders))
 
 # this is using the old quotes list and the api quotes, but I want to switch to using the quotes from the files instead
 #[add_quote_to_images(quote=random.choice(api_quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(20)]
