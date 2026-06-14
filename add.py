@@ -2,7 +2,9 @@ import info
 
 import os
 import random
-import requests
+
+from quotes_files import get_quotes_from_files
+from quotes_api import get_quotes_from_api
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -23,27 +25,6 @@ def split_quotes(quote: str) -> list[str]:
         start = WORDS_PER_SENTENCE * i; end = WORDS_PER_SENTENCE * (i + 1)
         quotes_list.append(get_words(words_list, start, end))
     return quotes_list
-    
-def get_quotes_from_api():
-    response = requests.get("https://zenquotes.io/api/quotes/keyword=happiness")
-    data = response.json()
-    api_quotes = []
-    for item in data:
-        api_quotes.append(item['q'])
-    return api_quotes
-
-def get_quotes_from_files(quotes_source):
-    quotes = []
-    for filename in os.listdir(quotes_source):
-        try:
-            if filename.lower().endswith('.txt'):
-                with open(os.path.join(quotes_source, filename), 'r') as f:
-                    lines = f.readlines()
-                    for line in lines:
-                        quotes.append(line.strip())
-        except:
-            print("Error reading file: " + filename)
-    return quotes
 
 def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_chosen=None):
     """Add quotes to images in the specified folder."""
