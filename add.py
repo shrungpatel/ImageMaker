@@ -40,7 +40,9 @@ def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_ch
             img = Image.open(img_path).convert("L")
             draw = ImageDraw.Draw(img)
             try:
-                font_size = img.width / (len(lines_list[0]) - 2)
+                # TODO: make the font size more dynamic based on the image size, quote length, and font
+                # may need to make multiple formulas depending on the context
+                font_size = (img.width * img.height) ** 0.5 / (len(lines_list[0]) - 2)
                 fonts = ["arial.ttf", "BOOKOSI.TTF", "Candaraz.ttf", "georgia.ttf", "times.ttf", "verdana.ttf", "consola.ttf"]
                 if font_chosen is None:
                     font_chosen = random.choice(fonts)
@@ -74,6 +76,7 @@ def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_ch
                 draw.text((x, y), line, font=font, fill="white")
                 y += text_height + 20 # the 20 adds a little more spacing
             
+            # TODO: hash the image or image name to avoid duplicates
             output_path = os.path.join(output_folder + '/' + photo, photo) + str(random.randint(1, 10000)) + ".png"
             img.save(output_path)
             
@@ -207,5 +210,4 @@ quotes = get_quotes_from_files(quotes_source)
 for _ in range(5):
     add_quote_to_images(quote=random.choice(quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders))
 
-# this is using the old quotes list and the api quotes, but I want to switch to using the quotes from the files instead
 #[add_quote_to_images(quote=random.choice(api_quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(20)]
