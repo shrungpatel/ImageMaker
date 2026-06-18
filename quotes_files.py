@@ -5,7 +5,7 @@ def get_quotes_from_files(quotes_source):
     for filename in os.listdir(quotes_source):
         try:
             if filename.lower().endswith('.txt'):
-                with open(os.path.join(quotes_source, filename), 'r') as f:
+                with open(os.path.join(quotes_source, filename), 'r', encoding='utf-8') as f:
                     lines = f.readlines()
                     for line in lines:
                         quotes.append(line.strip())
