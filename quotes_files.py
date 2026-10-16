@@ -12,4 +12,4 @@ def get_quotes_from_files(quotes_source):
                         quotes.append(line.strip() + ' - ' + author)
         except Exception as e:
             print("Error reading file: " + filename + " - " + str(e))
-    return quotes
+    return quotes, author

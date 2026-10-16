@@ -26,12 +26,14 @@ def split_quotes(quote: str) -> list[str]:
         quotes_list.append(get_words(words_list, start, end))
     return quotes_list
 
-def add_quote_to_images(quote: str, photos_folder, output_folder, photo, font_chosen=None):
+def add_quote_to_images(quote: str, author: str, photos_folder: str, output_folder: str, photo: str, font_chosen=None):
     """Add quotes to images in the specified folder."""
     os.makedirs(output_folder + '/' + photo, exist_ok=True)
     for filename in os.listdir(photos_folder + '/' + photo):
         if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-            lines_list = split_quotes(quote) if len(quote) >= 30 else [quote]         
+            lines_list = split_quotes(quote) if len(quote) >= 30 else [quote]
+            if author is not None:
+                lines_list.append(f"- {author}")
             img_path = os.path.join(photos_folder + '/' + photo, filename)
             img = Image.open(img_path).convert("L")
             draw = ImageDraw.Draw(img)
@@ -90,9 +92,9 @@ output_folder = 'output'
 photos_folders = [f for f in os.listdir(photos_folder) if os.path.isdir(os.path.join(photos_folder, f))]
 
 quotes_source = info.QUOTES_DIR
-quotes = get_quotes_from_files(quotes_source)
+quotes, author = get_quotes_from_files(quotes_source)
 
 for _ in range(5):
-    add_quote_to_images(quote=random.choice(quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders))
+    add_quote_to_images(quote=random.choice(quotes), author=author, photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders))
 
 #[add_quote_to_images(quote=random.choice(api_quotes), photos_folder=photos_folder, output_folder=output_folder, photo=random.choice(photos_folders)) for _ in range(20)]
